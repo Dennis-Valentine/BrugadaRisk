@@ -1,23 +1,31 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+
+# Background --------------------------------------------------------------
+
+# This is the shiny app for the Brugada Syndrome Risk Stratification. 
+
+
+# Housekeeping ------------------------------------------------------------
 
 library(shiny)
 library(shinythemes)
-
-# global scope
-results <- c(PARS = 0, ST1_BS_ECG = 0, ER = 0, T1BP = 0)
+library(shinyalert)
 
 
-# Define UI for application that draws a histogram
+# Global Scope ------------------------------------------------------------
+
+# Size of the button
+width <- "100px" 
+# Button style 
+style <- "color: #fff; background-color: #4EAA7F; border-color: #284E42" 
+
+
+
+# Define UI for the calculator
 ui <- fluidPage(
     
-    theme = shinytheme("flatly"),
+    theme = shinythemes::shinytheme("flatly"),
+    
+    shinyalert::useShinyalert(),
 
     # Application title
     titlePanel("Brugada Syndrome Risk Stratification"),
@@ -49,10 +57,16 @@ h5("Results")
                       h6("Probable arrhythmia related syncope")),
                column(width = 3, actionButton(inputId = "PARS_yes", 
                                               label = "Yes (+12)", 
-                                              class="btn btn-success",
+                                              icon = icon(" "),
+                                              width = width,
+                                              style = style
+                                              #class="btn btn-success",
                                               )),
                column(width = 3, actionButton(inputId = "PARS_no", 
-                                              label = "No (+0)"))  
+                                              label = "No (+0)",
+                                              width = width,
+                                              style = style
+                                              ))  
            ), # End of variabel/fluidRow
            
            # Start of variable 2: Spontaneous Type 1 Brugada ECG pattern
@@ -60,10 +74,15 @@ h5("Results")
                column(width = 3, 
                       h6("Spontaneous Type 1 Brugada ECG pattern")),
                column(width = 3, actionButton(inputId = "ST1_BS_ECG_yes", 
-                                   label = "Yes (+14)", 
-                                   class="btn btn-success")),
+                                   label = "Yes (+14)",
+                                   width = width,
+                                   style = style
+                                   #class="btn btn-success"
+                                   )),
                column(width = 3, actionButton(inputId = "ST1_BS_ECG_no", 
-                                              label = "No (+0)"))  
+                                              label = "No (+0)",
+                                              width = width,
+                                              style = style))  
              ), # End of variabel/fluidRow
            
            # Start of variable 3: Early repolarization in peripheral leads
@@ -72,9 +91,14 @@ h5("Results")
                       h6("Early repolarization in peripheral leads")),
                column(width = 3, actionButton(inputId = "ER_yes", 
                                               label = "Yes (+9)", 
-                                              class="btn btn-success")),
-               column(width = 3, actionButton(inputId = "ER_yes", 
-                                              label = "No (+0)"))  
+                                              width = width,
+                                              style = style
+                                              #class="btn btn-success"
+                                              )),
+               column(width = 3, actionButton(inputId = "ER_no", 
+                                              label = "No (+0)",
+                                              width = width,
+                                              style = style))  
            ), # End of variabel/fluidRow
            
            # Start of variable 3: Type 1 Brugada pattern in peripheral leads
@@ -83,14 +107,20 @@ h5("Results")
                       h6("Type 1 Brugada pattern in peripheral leads")),
                column(width = 3, actionButton(inputId = "T1BP_yes", 
                                               label = "Yes (+9)", 
-                                              class="btn btn-success")),
+                                              width = width,
+                                              style = style
+                                              #class="btn btn-success"
+                                              )),
                column(width = 3, actionButton(inputId = "T1BP_no", 
-                                              label = "No (+0)"))  
+                                              label = "No (+0)",
+                                              width = width,
+                                              style = style))  
            ), # End of variabel/fluidRow
            
            #Start of sum of variables 
            fluidRow(
                column(width = 9,
+                      #plotOutput(outputId = "plot"),
                       textOutput(outputId = "sum")
                       )
                )
@@ -100,48 +130,61 @@ h5("Results")
 
 
 # Define server logic required to draw a histogram
-server <- function(input, output) {
+server <- function(input, output, session) {
     
-    # values <- reactiveValues(PARS = 0, ST1_BS_ECG = 0, ER = 0, T1BP = 0)
-    # 
-    # observeEvent(eventExpr = input$PARS_yes, once = TRUE,
-    #              handlerExpr = {values$PARS <- reactiveValues(PARS = 12)} )
+    shinyalert(
+        title = "Hello",
+        text = "Brugada Syndrome Risk Stratification",
+        size = "s", 
+        closeOnEsc = TRUE,
+        closeOnClickOutside = TRUE,
+        html = TRUE,
+        type = "warning",
+        showConfirmButton = TRUE,
+        showCancelButton = FALSE,
+        confirmButtonText = "OK",
+        confirmButtonCol = "#AEDEF4",
+        timer = 0,
+        imageUrl = "",
+        animation = TRUE
+    )
     
-    # observeEvent(eventExpr = input$PARS_yes, 
-    #              handlerExpr = {values <- reactiveValues(PARS_yes = 12)} )
+    react_pars <- reactiveValues()
     
-    # values <- reactiveValues()
-    # values$PARS_yes <- 12
-    # values$PARS_no <- 0
-
-
+    inuse <- function(x){
+        updateActionButton(session = session, inputId = x, icon = icon("check")) 
+                           }
+    
+    unuse <- function(x){
+        updateActionButton(session = session, inputId = x, icon = icon("times"))   
+    }
+    
+    observeEvent(input$PARS_yes, {react_pars$PARS <- 12; 
+    inuse("PARS_yes"); unuse("PARS_no") })
+    observeEvent(input$PARS_no, {react_pars$PARS <- 0;
+    inuse("PARS_no"); unuse("PARS_yes") })
+    
+    observeEvent(input$ST1_BS_ECG_yes, {react_pars$ST1 <- 14;
+    inuse("ST1_BS_ECG_yes"); unuse("ST1_BS_ECG_no") })
+    observeEvent(input$ST1_BS_ECG_no, {react_pars$ST1 <- 0;
+    inuse("ST1_BS_ECG_no"); unuse("ST1_BS_ECG_yes")})
+    
+    observeEvent(input$ER_yes, {react_pars$ER <- 9;
+    inuse("ER_yes"); unuse("ER_no")})
+    observeEvent(input$ER_no, {react_pars$ER <- 0;
+    inuse("ER_no"); unuse("ER_yes")})
+    
+    observeEvent(input$T1BP_yes, {react_pars$T1BP <- 9;
+    inuse("T1BP_yes"); unuse("T1BP_no")})
+    observeEvent(input$T1BP_no, {react_pars$T1BP <- 0;
+    inuse("T1BP_no"); unuse("T1BP_yes")})
     
     output$sum <- renderText(
         
-        expr = {
-            
-            results <- c(PARS = 0, ST1_BS_ECG = 0, ER = 0, T1BP = 0)
-            if(input$PARS_yes >= 1){
-                results[1] <- 12    
-            } 
-            
-            if(input$ST1_BS_ECG_yes >= 1){
-                results[2] <- 14
-            }
-            
-            if(input$ER_yes >= 1){
-                results[3] <- 9
-            }
-            
-            if(input$T1BP_yes >= 1){
-                results[4] <- 9
-            }
-            
-            sum(results)
-            
-            #sum( (input$PARS_yes * 12 ), (input$ST1_BS_ECG_yes * 14))
-            
-            }
+        expr = { sum(react_pars[['PARS']],
+                     react_pars[['ST1']], 
+                     react_pars[['ER']],
+                     react_pars[['T1BP']]) }
         ) # end of renderText
 }
 

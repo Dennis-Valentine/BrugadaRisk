@@ -5,8 +5,8 @@ account: denden-labs
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3204138
-bundleId: 3844804
+bundleId: 3848542
 url: https://denden-labs.shinyapps.io/Brugada_Syndrome/
-when: 1605044939.75977
+when: 1605120460.91193
 asMultiple: FALSE
 asStatic: FALSE

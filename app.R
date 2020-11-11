@@ -9,11 +9,14 @@
 
 library(shiny)
 library(shinythemes)
+library(shinyalert)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
   
-  theme = shinytheme("flatly"),
+  theme = shinythemes::shinytheme("flatly"),
+  
+  shinyalert::useShinyalert(),
   
   # Application title
   titlePanel("Brugada Syndrome Risk Stratification"),
@@ -24,10 +27,14 @@ ui <- fluidPage(
                h6("Probable arrhythmia related syncope")),
         column(width = 3, actionButton(inputId = "PARS_yes", 
                                        label = "Yes (+12)", 
-                                       class="btn btn-success",
-        )),
+                                       icon = icon("area-chart"),
+                                       #class = "btn btn-secondary",
+                                       background = "#73746C"
+                                       )),
         column(width = 3, actionButton(inputId = "PARS_no", 
-                                       label = "No (+0)"))),
+                                       label = "No (+0)", 
+                                       class = "btn btn-secondary"
+                                       ))),
         
         #Start of sum of variables 
         fluidRow(
@@ -38,7 +45,25 @@ ui <- fluidPage(
 
 
 # Define server logic required to draw a histogram
-server <- function(input, output) {
+server <- function(input, output, session) {
+ 
+   shinyalert(
+    title = "Hello",
+    text = "Brugada Syndrome Risk Stratification",
+    size = "s", 
+    closeOnEsc = TRUE,
+    closeOnClickOutside = TRUE,
+    html = TRUE,
+    type = "warning",
+    showConfirmButton = TRUE,
+    showCancelButton = FALSE,
+    confirmButtonText = "OK",
+    confirmButtonCol = "#AEDEF4",
+    timer = 0,
+    imageUrl = "",
+    animation = TRUE
+  )
+  
   
   #react_pars <- reactiveValues(PARS = 0, ST1_BS_ECG = 0, ER = 0, T1BP = 0)
   
@@ -46,8 +71,15 @@ server <- function(input, output) {
   #print(react_pars)
   react_pars <- reactiveValues()
   
-  observeEvent(input$PARS_yes, {react_pars$PARS <- 12 })
+  #class_success <-
+  observeEvent(input$PARS_yes, {react_pars$PARS <- 12})
   observeEvent(input$PARS_no, {react_pars$PARS <- 0 })
+  
+  # observe(req(input$PARS_yes), {
+  #   updateActionButton(session, "PARS_yes",
+  #                      style="background-color: #73746C")
+  # } )
+
   
   output$sum <- renderText(
     
