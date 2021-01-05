@@ -9,6 +9,7 @@
 library(shiny)
 library(shinythemes)
 library(shinyalert)
+library(ggplot2)
 
 
 # Global Scope ------------------------------------------------------------
@@ -17,6 +18,9 @@ library(shinyalert)
 width <- "100px" 
 # Button style 
 style <- "color: #fff; background-color: #4EAA7F; border-color: #284E42" 
+
+# User risk variable
+user_risk <- 0
 
 # TODO: the buttons should be  Radio Group Buttons (http://shinyapps.dreamrs.fr/shinyWidgets/) 
 
@@ -120,7 +124,7 @@ h5("Results")
            #Start of sum of variables 
            fluidRow(
                column(width = 9,
-                      #plotOutput(outputId = "plot"),
+                      plotOutput(outputId = "plot"),
                       textOutput(outputId = "sum")
                       )
                )
@@ -181,11 +185,40 @@ server <- function(input, output, session) {
     
     output$sum <- renderText(
         
-        expr = { sum(react_pars[['PARS']],
+        expr = { user_risk <- sum(react_pars[['PARS']],
                      react_pars[['ST1']], 
                      react_pars[['ER']],
                      react_pars[['T1BP']]) }
         ) # end of renderText
+    
+    output$plot <- renderPlot(expr = {
+        
+        user_risk <- sum(react_pars[['PARS']],
+                         react_pars[['ST1']], 
+                         react_pars[['ER']],
+                         react_pars[['T1BP']])
+        
+        data <- data.frame(
+            category=c("user_risk", "max_risk"),
+            count=c(user_risk, 44))
+        
+        # Compute percentages
+        data$fraction = data$count / 44
+        
+        # Compute the cumulative percentages (top of each rectangle)
+        data$ymax = data$fraction
+        
+        # Compute the bottom of each rectangle
+        data$ymin = c(0, head(data$ymax, n=-1))
+        
+        # Make the plot
+        ggplot(data, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = category)) +
+            geom_rect() +
+            coord_polar(theta="y") + # Try to remove that to understand how the chart is built initially
+            annotate("text", label = user_risk, size = 15, x = 0, y = 0) +
+            theme_void()
+        }
+    )
 }
 
 # Run the application 
