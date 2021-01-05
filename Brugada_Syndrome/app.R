@@ -18,7 +18,7 @@ width <- "100px"
 # Button style 
 style <- "color: #fff; background-color: #4EAA7F; border-color: #284E42" 
 
-
+# TODO: the buttons should be  Radio Group Buttons (http://shinyapps.dreamrs.fr/shinyWidgets/) 
 
 # Define UI for the calculator
 ui <- fluidPage(
