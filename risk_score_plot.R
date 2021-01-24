@@ -12,7 +12,7 @@ library(tidyr)
 
 # Building the plot -------------------------------------------------------
 
-user_risk <- 44
+user_risk <- 30
 data <- data.frame(
   category=c("user_risk", "max_risk"),
   count=c(user_risk, 44)
@@ -29,68 +29,19 @@ data$ymax = data$fraction
 data$ymin = c(0, head(data$ymax, n=-1))
 
 # Make the plot
+base_colour <- "#DBEAE0"
+#fill_col <- "#C69A60"
+fill_col_range <- seq(from = 1, to = 5, by = 1)
+names(fill_col_range) <- c("#4C8C4C", "#82C57B", "#CBCC85", "#DD9854", "#B22B3B")
+fill_col_index <- round(quantile(fill_col_range, user_risk/44))
+fill_col <- fill_col_range[fill_col_index]
+
 ggplot(data, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = category)) +
   geom_rect() +
   coord_polar(theta="y") + # Try to remove that to understand how the chart is built initially
   annotate("text", label = user_risk, size = 15, x = 0, y = 0) +
-  theme_void()
+  scale_fill_manual(values = c(base_colour, names(fill_col))) +
+  theme_void() +
+  theme(legend.position = "none")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-#install.packages("gganimate")
-library(gganimate)
-
-file_renderer(dir = ".")
-
-
-
-tmp <- t(data.frame(PARS = 12, ST1_BS_ECG = 14, ER = 9, T1BP = 9))
-tmp <- as.data.frame(tmp)
-colnames(tmp) <- "score"
-tmp
-
-total <- sum(18 + 12 + 14)
-score <- 30
-
-results <- data.frame(score = 1:10)
-results
-
-p <- ggplot(data = results, aes(x = 1, y = 1, label = score)) +
-  geom_text() 
-ani <- p +  transition_states(score,
-                    transition_length = 2,
-                    state_length = 1) +
-  ease_aes('cubic-in-out')
-
-ani
-
-ggplot(data = data.frame(), aes(x = factor(1), y = score)) +
-  geom_bar(stat = "identity") +
-  coord_polar() +
-  ylim(c(-5,40))
-
-
-ggplot(data = data.frame(), aes(xmin = 1, xmax = 2, ymin = 1, ymax = score )) +
-  geom_rect() +
-  coord_polar() +
-  ylim(c(-3,40))
-  
-
-
-  geom_bar(stat = "identity") +
-  theme_minimal() +
-  xlab(label = "") +
-  ylab(label = "") +
-  scale_y_continuous(limits = c(0,44)) +
 
