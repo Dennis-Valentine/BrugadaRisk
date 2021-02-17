@@ -22,6 +22,11 @@ style <- "color: #fff; background-color: #4EAA7F; border-color: #284E42"
 # User risk variable
 user_risk <- 0
 
+# Data used to generate the line graph
+# RF_tab <- read.csv(file = "rf_perm_table.csv")
+# RF_tab$AVE <- as.numeric(gsub(pattern = "%", replacement = "", x = RF_tab$AVE))
+
+
 # TODO: the buttons should be  Radio Group Buttons (http://shinyapps.dreamrs.fr/shinyWidgets/) 
 
 # Define UI for the calculator
@@ -37,18 +42,21 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-            p("Background"),
-            p("Risk stratification for sudden cardiac death (SCD) in Brugada syndrome (BrS) is a significant challenge."), 
-            h5("Purpose"),
-            p("To evaluate the importance of clinical and ECG factors in the likelihood of developing significant ventricular arrhythmias (VAs)/SCD in BrS patients."),
-            h5("Methods"),
-p("VA occurrence during follow-up were assessed and the role of 16 proposed clinical or ECG risk markers evaluated in a multicenter international study of BrS patients and no history of cardiac arrest. Markers with predictive power were identified and incorporated into a risk score model."),
-h5("Results")
-
-#Across 15 international centers, 1084 patients were included. During a follow-up of 5.3 years (IQR 2.7–9.0 years)- 110 patients had VA occurrence (10.1%) with an annual event rate of 1.7% (95% CI 1.4–2.0). Of the 16 proposed risk factors, diagnosis by family screening of sudden cardiac death (HR 4.65; p<0.001), probable arrhythmia related syncope (HR 3.88, p<0.001), type 1 spontaneous ECG (HR 3.56; p<0.001), Early Repolarisation (HR 3.15; p<0.001) and type 1 Brugada pattern in peripheral leads (HR 2.42; p<0.001) were associated with a higher VA occurrence risk during follow-up. These 5 variables were incorporated into a risk score model whereby each variable was allocated a point score based on the variable's predictive strength. The total points obtained from the model for a patient could then be translated into the predicted VA occurrence risk during follow-up (Figure 1). The model showed a sensitivity of 63.5% (95% CI 50.0–76.9) and specificity of 84.2% (95% CI 81.1–87.1) in predicting VA occurrence at 5-years follow-up. The model showed a greater discriminative power compared to an existing model (AUC 0.83 vs. 0.71; p<0.001)."),
+            p("BRUGADA-RISK estimates the risk of ventricular arrhythmias (VA) or sudden cardiac death (SCD) at 5 years in patients with Brugada syndrome."),
+            p("BRUGADA-RISK has a sensitivity of 71.2% and a specificity of 80.2% for the prediction of VA/SCD at 5 years."),
+            p("Risk for an individual patient can be calculated from the following equation:"), 
+            code(em("Probable arrhythmia related syncope +\n
+                 Spontaneous Type 1 Brugada ECG pattern + \n
+                 Early repolarization in peripheral leads +
+                 Type 1 Brugada pattern in peripheral leads")), 
             
+            br(),
+            br(),
             
-
+            p("Reference: S Honarbakhsh, R Providencia, J Garcia-Hernandez, et al … , PD Lambiase. A Primary Prevention Clinical Risk Score Model for Patients With Brugada Syndrome (BRUGADA-RISK). JACC Clin Electrophysiol 2020 Oct 28;[EPub Ahead of Print]"),
+            downloadLink(outputId = "BR_paper", label = "Download"),
+            #a("Click here to get the PDF", href="www/BR_paper.pdf")
+            #a("paper", href='www/BR_paper.pdf')
         ),
 
         # Show a plot of the generated distribution
@@ -94,7 +102,7 @@ h5("Results")
                column(width = 3, 
                       h6("Early repolarization in peripheral leads")),
                column(width = 3, actionButton(inputId = "ER_yes", 
-                                              label = "Yes (+9)", 
+                                              label = "Yes (+12)", 
                                               width = width,
                                               style = style
                                               #class="btn btn-success"
@@ -105,7 +113,7 @@ h5("Results")
                                               style = style))  
            ), # End of variabel/fluidRow
            
-           # Start of variable 3: Type 1 Brugada pattern in peripheral leads
+           # Start of variable 4: Type 1 Brugada pattern in peripheral leads
            fluidRow(
                column(width = 3, 
                       h6("Type 1 Brugada pattern in peripheral leads")),
@@ -123,10 +131,11 @@ h5("Results")
            
            #Start of sum of variables 
            fluidRow(
-               column(width = 9,
-                      plotOutput(outputId = "plot"),
-                      textOutput(outputId = "sum")
-                      )
+               column(width = 6,
+                      plotOutput(outputId = "plot_circle"),
+                      ),
+               column(width = 6, 
+                      plotOutput(outputId = "plot_linegraph"))
                )
            ) # End of 
     ) # End of mainPanel
@@ -138,7 +147,7 @@ server <- function(input, output, session) {
     
     shinyalert(
         title = "Hello",
-        text = "Brugada Syndrome Risk Stratification",
+        text = "Brugada Syndrome Risk Stratification. Predict ventricular arrhythmias / SCD at 5 years",
         size = "s", 
         closeOnEsc = TRUE,
         closeOnClickOutside = TRUE,
@@ -151,6 +160,13 @@ server <- function(input, output, session) {
         timer = 0,
         imageUrl = "",
         animation = TRUE
+    )
+    
+    # Download PDF
+    output$BR_paper <- downloadHandler(
+        filename = "BR_paper.pdf",
+        content = function(file) {
+            file.copy("www/BR_paper.pdf", file)}
     )
     
     react_pars <- reactiveValues()
@@ -173,7 +189,7 @@ server <- function(input, output, session) {
     observeEvent(input$ST1_BS_ECG_no, {react_pars$ST1 <- 0;
     inuse("ST1_BS_ECG_no"); unuse("ST1_BS_ECG_yes")})
     
-    observeEvent(input$ER_yes, {react_pars$ER <- 9;
+    observeEvent(input$ER_yes, {react_pars$ER <- 12;
     inuse("ER_yes"); unuse("ER_no")})
     observeEvent(input$ER_no, {react_pars$ER <- 0;
     inuse("ER_no"); unuse("ER_yes")})
@@ -191,7 +207,7 @@ server <- function(input, output, session) {
                      react_pars[['T1BP']]) }
         ) # end of renderText
     
-    output$plot <- renderPlot(expr = {
+    output$plot_circle <- renderPlot(expr = {
         
         user_risk <- sum(react_pars[['PARS']],
                          react_pars[['ST1']], 
@@ -199,11 +215,11 @@ server <- function(input, output, session) {
                          react_pars[['T1BP']])
         
         data <- data.frame(
-            category=c("user_risk", "max_risk"),
-            count=c(user_risk, 44))
+            category = c("user_risk", "max_risk"),
+            count = c(user_risk, 47))
         
         # Compute percentages
-        data$fraction = data$count / 44
+        data$fraction = data$count / 47
         
         # Compute the cumulative percentages (top of each rectangle)
         data$ymax = data$fraction
@@ -212,13 +228,60 @@ server <- function(input, output, session) {
         data$ymin = c(0, head(data$ymax, n=-1))
         
         # Make the plot
+        base_colour <- "#DBEAE0"
+        #fill_col <- "#C69A60"
+        fill_col_range <- seq(from = 1, to = 5, by = 1)
+        names(fill_col_range) <- c("#4C8C4C", "#82C57B", "#CBCC85", "#DD9854", "#B22B3B")
+        fill_col_index <- round(quantile(fill_col_range, user_risk/47))
+        fill_col <- fill_col_range[fill_col_index]
+        
+        # Making the label that fits inside the circle 
+        risk_at_5 <- "tmp"
+        # risk_at_5 <- subset(RF_tab, SC == user_risk)$AVE
+        # risk_at_5 <- paste0(unique(risk_at_5), "%")
+
+        label_user_score <- c(paste("User score:", user_risk))
+        label_predicted_event <- c(paste("Predicted event over \n 5 years:", risk_at_5))
+        label_display <- paste(label_user_score, "\n", "\n", label_predicted_event)
+
         ggplot(data, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = category)) +
             geom_rect() +
-            coord_polar(theta="y") + # Try to remove that to understand how the chart is built initially
-            annotate("text", label = user_risk, size = 15, x = 0, y = 0) +
-            theme_void()
+            coord_polar(theta = "y") + # Try to remove that to understand how the chart is built initially
+            annotate("text", label = label_display, size = 7, x = 0, y = 0) +
+            scale_fill_manual(values = c(base_colour, names(fill_col))) +
+            theme_void() +
+            theme(legend.position = "none")
         }
     )
+    
+    
+    output$plot_linegraph <- renderPlot(expr = {
+        
+        # user_risk <- sum(react_pars[['PARS']],
+        #                  react_pars[['ST1']], 
+        #                  react_pars[['ER']],
+        #                  react_pars[['T1BP']])
+        # 
+        # label_point_df <- subset(RF_tab, SC == user_risk)
+        # 
+        # ggplot(data = RF_tab, aes(x = SC, y = AVE)) +
+        #     geom_point(colour = ifelse(RF_tab$SC == user_risk, "red", "grey50")) +
+        #     geom_line() +
+        #     ggrepel::geom_text_repel(data = label_point_df[1,], inherit.aes = FALSE,
+        #                              direction = "y",
+        #                              min.segment.length = 0, seed = 45, box.padding = 1,
+        #                              aes(x = SC, y = AVE, 
+        #                                  label = paste("User Score:", user_risk, "\n", "Estimated Risk:",
+        #                                                label_point_df[1,"AVE"], "%"))) +
+        #     xlab(label = "Total Risk Points") +
+        #     ylab(label = "Five Year Predicted Risk of VA/SCD") + 
+        #     ggtitle(label = "Risk Score Calculation and Predicted Event Rates Over 5 Years") +
+        #     scale_x_continuous(breaks = seq(from = 0, to = 47, by = 5)) +
+        #     scale_y_continuous(breaks = seq(from = 0, to = 100, by = 10), limits = c(0, 100)) +
+        #     theme_minimal()
+        
+        
+    })
 }
 
 # Run the application 
