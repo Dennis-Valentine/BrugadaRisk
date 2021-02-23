@@ -5,9 +5,9 @@ account: denden-labs
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3204138
-bundleId: 4235461
+bundleId: 4261465
 url: https://denden-labs.shinyapps.io/Brugada_Syndrome/
-when: 1613568472.79209
+when: 1614084049.644
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: rf_perm_table.csv
+ignoredFiles: old_app.R|rf_perm_table.csv|rf_perm_table_cleaning.R

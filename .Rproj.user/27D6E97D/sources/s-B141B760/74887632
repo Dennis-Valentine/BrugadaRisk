@@ -1,0 +1,24 @@
+{
+    "id": "74887632",
+    "path": "~/GitHub/BrugadaRisk/Brugada_Syndrome/app.R",
+    "project_path": "Brugada_Syndrome/app.R",
+    "type": "r_source",
+    "hash": "1166293408",
+    "contents": "",
+    "dirty": false,
+    "created": 1614083864487.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "cursorPosition": "179,77",
+        "scrollLine": "172"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1614084659,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1614084659090,
+    "read_only": false,
+    "read_only_alternatives": []
+}
