@@ -1,0 +1,145 @@
+"Risk_Score","country","Predicted_Risk"
+0,"Average",1.5
+0,"Spain",3.7
+0,"Italy",0
+0,"Brazil",1.4
+0,"Portugal",0.5
+0,"United Kingdom",1
+0,"Switzerland",2.7
+0,"Germany",3.6
+0,"France",0.8
+9,"Average",3.6
+9,"Spain",8.8
+9,"Italy",0
+9,"Brazil",3.4
+9,"Portugal",1.3
+9,"United Kingdom",2.4
+9,"Switzerland",6.6
+9,"Germany",8.6
+9,"France",2.1
+12,"Average",4.9
+12,"Spain",11.7
+12,"Italy",0
+12,"Brazil",4.6
+12,"Portugal",1.8
+12,"United Kingdom",3.2
+12,"Switzerland",8.8
+12,"Germany",11.4
+12,"France",2.8
+12,"Average",4.9
+12,"Spain",11.7
+12,"Italy",0
+12,"Brazil",4.6
+12,"Portugal",1.8
+12,"United Kingdom",3.2
+12,"Switzerland",8.8
+12,"Germany",11.4
+12,"France",2.8
+14,"Average",5.9
+14,"Spain",14.1
+14,"Italy",0
+14,"Brazil",5.6
+14,"Portugal",2.2
+14,"United Kingdom",4
+14,"Switzerland",10.6
+14,"Germany",13.8
+14,"France",3.4
+21,"Average",11.5
+21,"Spain",26.4
+21,"Italy",0
+21,"Brazil",11
+21,"Portugal",4.3
+21,"United Kingdom",7.8
+21,"Switzerland",20.2
+21,"Germany",25.8
+21,"France",6.6
+21,"Average",11.5
+21,"Spain",26.4
+21,"Italy",0
+21,"Brazil",11
+21,"Portugal",4.3
+21,"United Kingdom",7.8
+21,"Switzerland",20.2
+21,"Germany",25.8
+21,"France",6.6
+23,"Average",13.9
+23,"Spain",31.2
+23,"Italy",0
+23,"Brazil",13.3
+23,"Portugal",5.2
+23,"United Kingdom",9.4
+23,"Switzerland",24.1
+23,"Germany",30.5
+23,"France",8.1
+24,"Average",15.2
+24,"Spain",33.8
+24,"Italy",0
+24,"Brazil",14.5
+24,"Portugal",5.8
+24,"United Kingdom",10.4
+24,"Switzerland",26.3
+24,"Germany",33.1
+24,"France",8.9
+26,"Average",18.3
+26,"Spain",39.6
+26,"Italy",0
+26,"Brazil",17.5
+26,"Portugal",7
+26,"United Kingdom",12.5
+26,"Switzerland",31.1
+26,"Germany",38.8
+26,"France",10.7
+26,"Average",18.3
+26,"Spain",39.6
+26,"Italy",0
+26,"Brazil",17.5
+26,"Portugal",7
+26,"United Kingdom",12.5
+26,"Switzerland",31.1
+26,"Germany",38.8
+26,"France",10.7
+33,"Average",33.4
+33,"Spain",63.8
+33,"Italy",0
+33,"Brazil",32
+33,"Portugal",13.6
+33,"United Kingdom",23.6
+33,"Switzerland",52.8
+33,"Germany",62.8
+33,"France",20.4
+35,"Average",39.1
+35,"Spain",71.1
+35,"Italy",0
+35,"Brazil",37.6
+35,"Portugal",16.3
+35,"United Kingdom",28.1
+35,"Switzerland",60
+35,"Germany",70.1
+35,"France",24.3
+35,"Average",39.1
+35,"Spain",71.1
+35,"Italy",0
+35,"Brazil",37.6
+35,"Portugal",16.3
+35,"United Kingdom",28.1
+35,"Switzerland",60
+35,"Germany",70.1
+35,"France",24.3
+38,"Average",48.8
+38,"Spain",81.3
+38,"Italy",0
+38,"Brazil",47.1
+38,"Portugal",21.4
+38,"United Kingdom",35.9
+38,"Switzerland",71
+38,"Germany",80.4
+38,"France",31.4
+47,"Average",80.7
+47,"Spain",98.4
+47,"Italy",0
+47,"Brazil",79.1
+47,"Portugal",44.7
+47,"United Kingdom",66.5
+47,"Switzerland",95.2
+47,"Germany",98.2
+47,"France",60.4
